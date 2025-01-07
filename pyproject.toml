@@ -1,0 +1,42 @@
+[project]
+version = "0.3.0"
+requires-python = ">= 3.10"
+
+[tool.sqlfluff.core]
+dialect = "postgres"
+max_line_length = 120
+templater = "jinja"
+sql_file_exts = ".sql,.sql.j2,.dml,.ddl"
+rules = "all"
+large_file_skip_byte_limit = 20000
+
+[tool.sqlfluff.indentation]
+tab_space_size = 4
+indented_joins = false
+indented_using_on = true
+template_blocks_indent = false
+
+[tool.sqlfluff.layout.type.comma]
+line_position = "leading"
+
+[tool.sqlfluff.templater]
+unwrap_wrapped_queries = true
+
+[tool.sqlfluff.templater.jinja]
+apply_dbt_builtins = true
+
+# For rule specific configuration, use dots between the names exactly
+# as you would in .sqlfluff. In the background, SQLFluff will unpack the
+# configuration paths accordingly.
+[tool.sqlfluff.rules.capitalisation.keywords]
+capitalisation_policy = "lower"
+[sqlfluff.rules.capitalisation.identifiers]
+extended_capitalisation_policy = "lower"
+[sqlfluff.rules.capitalisation.functions]
+extended_capitalisation_policy = "lower"
+[sqlfluff.rules.capitalisation.literals]
+capitalisation_policy = "lower"
+[sqlfluff.rules.capitalisation.types]
+extended_capitalisation_policy = "lower"
+[tool.sqlfluff.rules.convention.count_rows]
+prefer_count_1 = true
