@@ -7,7 +7,7 @@ group by 1
 )
 , financings as ( 
 select customer_id 
-	, max (case when state in ('DISBURSED', 'COLLECTION', 'OVERDUE', 'PAID') then 1 else 0 end) as previous_financing
+	, max(case when state in ('DISBURSED', 'COLLECTION', 'OVERDUE', 'PAID') then 1 else 0 end) as previous_financing
 	, max (case when state in ('DISBURSED', 'COLLECTION', 'OVERDUE') then 1 else 0 end) as active_financing
 from mfs_replica_db.loan 
 group by 1
