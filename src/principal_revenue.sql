@@ -15,15 +15,13 @@ group by 1
 , collections as ( 
 select distinct l.customer_id 
 from mfs_replica_db.loan l 
-inner join mfs_replica_db.collection c2 on l.id = c2.loan_id -- and c2.active = True
+inner join mfs_replica_db.collection c2 on l.id = c2.loan_id
 )
 , unpaid_principal_raw as ( -- Across all loans of the given client
 select 
 	  l.customer_id 
 	, l.id as loan_id
-	-- , l.state
 	, l.principal as principal
-	-- , rti.currency 
 	, sum(rti.amount) as paid_principal
 from mfs_replica_db.loan l 
 inner join mfs_replica_db.installment i on l.id = i.loan_id
@@ -89,7 +87,7 @@ select
 from mfs_replica_db.risk_evaluation a 
 inner join mfs_replica_db.risk_evaluation_grade b on a.id = b.risk_evaluation_id
 where to_char(a.created_at, 'YYYY-MM') = '2024-12'
-and partner_code != 'Google'
+and partner_code <> 'Google'
 and a."type" = 'BUSINESS_DATA'
 group by 1, 2
 )
@@ -98,7 +96,6 @@ select
 	, p.reg_num as ico
 	, p.country 
 	, p.name 
-	-- , p.partner_code 
 	, pts.partners_list
 	, p.email 
 	, p.phone 
@@ -124,7 +121,7 @@ inner join mfs_replica_db.party p on c.party_id = p.id
 left join partners pts on c.party_id = pts.customer_id
 left join financings f on c.party_id = f.customer_id
 left join collections coll on c.party_id = coll.customer_id
-left join unpaid_principal up on c.party_id = up.customer_id -- and up.state in ('OVERDUE', 'COLLECTION')
+left join unpaid_principal up on c.party_id = up.customer_id
 left join reps r1 on c.party_id = r1.party_id and r1.within_company_rank = 1
 left join reps r2 on c.party_id = r2.party_id and r2.within_company_rank = 2
 left join clients_with_active_offer vo on c.party_id::text = vo.customer_id
